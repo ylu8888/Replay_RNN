@@ -1,8 +1,9 @@
 #dataset.py
-# the code creates a dataset for training a location prediction model by organizing user mobility data
-#into fixed length sequences and batching them for efficient processing
-# the dataset class prepares the data in a way that supports RNN based models
-# REPLAY relies on structured sequence data to learn time varying temporal regularities in human mobility
+# splits data into training and testing (80% train 20% test)
+# turns user movement history into fixed-length sequences for training.
+# shuffles data to make training more effective.
+# handles batching so the model can learn from multiple users at once.
+# prepares labels (future locations) for the model to predict.
 import random
 from enum import Enum
 import torch
