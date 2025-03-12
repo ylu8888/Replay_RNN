@@ -1,15 +1,16 @@
 #dataset.py
-# the code creates a dataset for training a location prediction model by organizing user mobility data 
-#into fixed-length sequences and batching them for efficient processing. 
+# the code creates a dataset for training a location prediction model by organizing user mobility data
+#into fixed length sequences and batching them for efficient processing
 # the dataset class prepares the data in a way that supports RNN based models
-# It splits the data into training and testing sets
-# REPLAY relies on structured sequence data to learn time-varying temporal regularities in human mobility,
+# REPLAY relies on structured sequence data to learn time varying temporal regularities in human mobility
 import random
 from enum import Enum
 import torch
 from torch.utils.data import Dataset
 
 # this is the dataset split types either training or testing
+#need two sets so model learns patterns from the training set
+# and is then evaluated on unseen testing data to measure how well it generalizes
 class Split(Enum):
 
     TRAIN = 0
@@ -213,7 +214,6 @@ class PoiDataset(Dataset):
     # retrieves a batch of sequences and labels for model training
     def __getitem__(self, idx):
 
-
         seqs = []
         times = []
         time_slots = []
@@ -269,3 +269,8 @@ class PoiDataset(Dataset):
         y_t_slot = torch.stack(lbl_time_slots, dim=1)
         y_s = torch.stack(lbl_coords, dim=1)
         return x, t, t_slot, s, y, y_t, y_t_slot, y_s, reset_h, torch.tensor(self.active_users)
+
+#REPLAY is a smart model that predicts where someone will go next based on their past locations
+# it is better than older methods because it understands that people have different routines at different times,
+# like being more predictable in the morning than at night It beats other models by up to 10.9%
+# replay learns these patterns and makes more accurate guesses about future locations
